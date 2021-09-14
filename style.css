@@ -107,11 +107,18 @@ h1 {
     color: var(--done-text-color);
 }
 
+.todo-list .todo-item button.btn-toggle-item.active {
+    background-image: url(images/icon-check.svg), linear-gradient(hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .todo-input {
     background: transparent;
     outline: none;
     border: none;
-    color:var(--done-text-color);
+    color:var(--not-done-text-color);
+    flex-grow: 1;
 }
 .todo-footer {
     display: none;
