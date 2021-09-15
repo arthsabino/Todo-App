@@ -6,22 +6,54 @@ if(document.readyState === 'loading') {
 
 
 function ready() {
+    let todoInput = document.getElementsByClassName('todo-input')[0]
+    let btnClearCompleted = document.getElementsByClassName('btn-clear-completed')[0]
+
+    btnClearCompleted.addEventListener('click', clearCompletedClicked)
+    todoInput.addEventListener('keypress', todoInputKeyPressed)
+    todoItemsButtonsAddClickEventListener()
+}
+
+function todoItemsButtonsAddClickEventListener() {
+    todoItemsButtonsDoneAddClickEventListener()
+    todoItemsRemoveButtonsAddClickEventListener()
+}
+
+function todoItemsButtonsDoneAddClickEventListener() {
     let todoList = document.getElementsByClassName('todo-list')[0]
     let todoItemsButtons = todoList.getElementsByClassName('btn-toggle-item')
-    let todoFilterButtons = document.getElementsByClassName('btn-todo-filter')
-    let todoInput = document.getElementsByClassName('todo-input')[0]
-
-
-    todoInput.addEventListener('keypress', todoInputKeyPressed)
     for (let i = 0; i < todoItemsButtons.length; i++) todoItemsButtons[i].addEventListener('click', todoItemClicked)
+}
+
+function todoItemsRemoveButtonsAddClickEventListener() {
+    let todoList = document.getElementsByClassName('todo-list')[0]
+    let todoItemsButtons = todoList.getElementsByClassName('btn-delete-item')
+    for (let i = 0; i < todoItemsButtons.length; i++) todoItemsButtons[i].addEventListener('click', removeButtonClicked)
+}
+
+function todoFilterButtonsAddClickEventListener(){
+    let todoFilterButtons = document.getElementsByClassName('btn-todo-filter')
     for (let i = 0; i < todoFilterButtons.length; i++) todoFilterButtons[i].addEventListener('click', todoFilterButtonClicked)
+
+}
+
+function removeButtonClicked (event){
+    let element = event.target
+    let todoItem = element.closest('.todo-item')
+    deleteToDoItem(todoItem)
 }
 
 function todoItemClicked(event) {
     let element = event.target;
     let todoTextElement = element.nextElementSibling
-    toggle(element, 'active')
+    let todoItemParentElement = element.closest('.todo-item')
+    toggle(todoItemParentElement, 'done');
+    toggle(element, 'done');
     toggleCrossText(todoTextElement)
+}
+
+function clearCompletedClicked(event) {
+    clearCompleted()
 }
 
 function todoFilterButtonClicked(event) {
@@ -32,6 +64,29 @@ function todoFilterButtonClicked(event) {
     let footerDuplicateElement = todoFooter.getElementsByClassName(element.classList.value)[0]
     element.classList.add('active')
     footerDuplicateElement.classList.add('active')
+    filterItems(element.dataset.filter)
+}
+
+function filterItems(status) {
+    let todoList = document.getElementsByClassName('todo-list')[0]
+    let todoItems = todoList.getElementsByClassName('todo-item')
+    for (let i = 0; i < todoItems.length; i++) {
+        if(status == 'all') todoItems[i].style.display = 'flex';
+        else if(status == 'active') todoItems[i].style.display = (todoItems[i].classList.contains('done')) ? 'none' : 'flex';
+        else if(status == 'completed') todoItems[i].style.display = (todoItems[i].classList.contains('done')) ? 'flex' : 'none';
+    }
+}
+
+function clearCompleted() {
+    let todoList = document.getElementsByClassName('todo-list')[0]
+    let todoItems = todoList.getElementsByClassName('todo-item')
+    for (let i = 0; i < todoItems.length; i++) {
+        
+        if(todoItems[i].classList.contains('done')) {
+            deleteToDoItem(todoItems[i])
+            
+        } 
+    } 
 }
 
 function todoInputKeyPressed(event) {
@@ -51,7 +106,8 @@ function addToDoItem(textItem) {
     let todoItem = createToDoItem(textItem)
 
     todoList.innerHTML += todoItem;
-
+    todoItemsButtonsAddClickEventListener()
+    updateCount()
 }
 
 function createToDoItem(textItem) {
@@ -67,6 +123,18 @@ function createToDoItem(textItem) {
     `
 
     return todoItem;
+}
+
+function deleteToDoItem(item) {
+    item.remove()
+    updateCount()
+}
+
+function updateCount() {
+    let todoList = document.getElementsByClassName('todo-list')[0]
+    let todoItems = todoList.getElementsByClassName('todo-item')
+    let itemsLeft = document.getElementsByClassName('items-left')[0]
+    itemsLeft.innerText = `${todoItems.length} items left`;
 }
 
 function toggle(element, toggleClass){
