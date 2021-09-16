@@ -8,10 +8,14 @@ if(document.readyState === 'loading') {
 function ready() {
     let todoInput = document.getElementsByClassName('todo-input')[0]
     let btnClearCompleted = document.getElementsByClassName('btn-clear-completed')[0]
+    let btnToggleTheme = document.getElementsByClassName('btn-toggle-theme')[0]
 
     btnClearCompleted.addEventListener('click', clearCompletedClicked)
+    btnToggleTheme.addEventListener('click', btnToggleThemeClicked)
     todoInput.addEventListener('keypress', todoInputKeyPressed)
     todoItemsButtonsAddClickEventListener()
+    todoFilterButtonsAddClickEventListener()
+    toggleTheme()
 }
 
 function todoItemsButtonsAddClickEventListener() {
@@ -35,6 +39,10 @@ function todoFilterButtonsAddClickEventListener(){
     let todoFilterButtons = document.getElementsByClassName('btn-todo-filter')
     for (let i = 0; i < todoFilterButtons.length; i++) todoFilterButtons[i].addEventListener('click', todoFilterButtonClicked)
 
+}
+
+function btnToggleThemeClicked(event) {
+    setTheme()
 }
 
 function removeButtonClicked (event){
@@ -79,14 +87,8 @@ function filterItems(status) {
 
 function clearCompleted() {
     let todoList = document.getElementsByClassName('todo-list')[0]
-    let todoItems = todoList.getElementsByClassName('todo-item')
-    for (let i = 0; i < todoItems.length; i++) {
-        
-        if(todoItems[i].classList.contains('done')) {
-            deleteToDoItem(todoItems[i])
-            
-        } 
-    } 
+    let todoItems = todoList.querySelectorAll('.todo-item')
+    for (let i = 0; i < todoItems.length; i++) if(todoItems[i].classList.contains('done')) deleteToDoItem(todoItems[i])
 }
 
 function todoInputKeyPressed(event) {
@@ -97,8 +99,6 @@ function todoInputKeyPressed(event) {
         event.target.value = ''
     }
     else alert('Input cannot be null')
-
-
 }
 
 function addToDoItem(textItem) {
@@ -145,4 +145,21 @@ function toggle(element, toggleClass){
 function toggleCrossText(element) {
     if(element.style.textDecoration === 'line-through') element.style.textDecoration = 'initial'
     else element.style.textDecoration = 'line-through'
+}
+
+function setTheme() {
+    themeName = (document.documentElement.className == 'theme-dark') ? 'theme-light' : 'theme-dark'
+    document.documentElement.className = themeName
+    localStorage.setItem('theme', themeName);
+    let btnToggleTheme = document.getElementsByClassName('btn-toggle-theme')[0]
+    btnToggleTheme.src = (document.documentElement.className == 'theme-dark') ? 'images/icon-sun.svg' : 'images/icon-moon.svg'
+}
+
+function toggleTheme() {
+    
+    if (localStorage.getItem('theme') === 'theme-dark') {
+        setTheme('theme-dark');
+    } else {
+        setTheme('theme-light');
+    }
 }

@@ -4,6 +4,7 @@
     --bright-blue: hsl(220, 98%, 61%);
     --check-background: linear-gradient hsl(192, 100%, 67%) 38%, hsl(280, 87%, 65%) 38% 100%;
 }
+
 .theme-dark {
     --background: hsl(235, 21%, 11%);
     --todo-background: hsl(235, 24%, 19%);
@@ -12,7 +13,18 @@
     --input-text-color: hsl(234, 11%, 52%);
     --done-text-color: hsl(233, 14%, 35%);
     --todo-filter-text-color: hsl(237, 14%, 26%);
-    background-image: url('images/bg-desktop-dark.jpg');
+    --background-image: url('images/bg-desktop-dark.jpg');
+}
+
+.theme-light {
+    --background: hsl(236, 33%, 92%);
+    --todo-background: hsl(0, 0%, 98%);
+    --not-done-text-color: hsl(235, 21%, 11%);
+    --not-done-text-color-hover: linear-gradient(hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+    --input-text-color: hsl(234, 11%, 52%);
+    --done-text-color: hsl(233, 11%, 84%);
+    --todo-filter-text-color: hsl(237, 14%, 26%);
+    --background-image: url('images/bg-desktop-light.jpg');
 }
 
 * {
@@ -25,10 +37,11 @@
 }
 
 body {
-    background: var(--background);
+    background: var(--background-image);
     background-size: 100% auto;
     background-position: top;
     background-repeat: no-repeat;
+    background-color: var(--background);
 }
 
 h1 {
@@ -111,6 +124,10 @@ h1 {
     background-image: url(images/icon-check.svg), linear-gradient(hsl(192, 100%, 67%), hsl(280, 87%, 65%));
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.todo-item.done .todo {
+    color: var(--done-text-color);
 }
 
 .todo-input {
